@@ -1,0 +1,28 @@
+---
+resources:
+  # ReactJS source code
+  - name: weather-app-repo
+    type: git
+    source:
+      uri: https://github.com/BryanGsep/Weather-Reactapp.git
+      branch: main
+
+  # Docker image in Docker Hub
+  - name: weather-app-image
+    type: docker-image
+    source:
+      repository: dotiendung/weather-app
+      tag: latest
+      username: ((dockerhub-username))
+      password: ((dockerhub-password))
+
+jobs:
+  - name: build-and-push
+    plan:
+      - get: weather-app-repo
+        trigger: true
+
+      # Build docker image & push to Docker Hub
+      - put: weather-app-image
+        params:
+          build: weather-app-repo
